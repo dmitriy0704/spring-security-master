@@ -66,8 +66,12 @@ public class SecurityConfig {
 
 ## Аутентификация из БД
 
+### //-> jdbcAuthentication
+
+Базовые таблицы users, authorities
+
 ```java
- //-> jdbcAuthentication
+ 
     @Bean
     public JdbcUserDetailsManager users(DataSource dataSource) {
 

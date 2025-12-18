@@ -30,12 +30,19 @@ public class SecurityConfig {
         http.authorizeHttpRequests(
                         request -> request
                                 .requestMatchers("/").anonymous()
+                                .requestMatchers("/login").permitAll()
                                 .requestMatchers("/authenticated/**").authenticated()
                                 .requestMatchers("/only_for_admins/**").hasRole("ADMIN")
                                 .requestMatchers("/read_profile/**").hasAuthority("READ_PROFILE")
                                 .anyRequest().permitAll()
                 )
-                .formLogin(Customizer.withDefaults())
+                .formLogin(form ->
+                                form
+//                                .loginPage("/login")
+                                        .loginProcessingUrl("/login")
+                                        .defaultSuccessUrl("/authenticated")
+                                        .permitAll()
+                )
                 .logout(logout -> logout.logoutSuccessUrl("/"))
 
         ;
@@ -63,26 +70,27 @@ public class SecurityConfig {
 //    @Bean
 //    public JdbcUserDetailsManager users(DataSource dataSource) {
 //
-//<!-        UserDetails user = User.builder()
-//                .username("user")
-//                .password("{bcrypt}$2a$12$td0Xz.UqCHMEqady3ay9huVMG.PvmMohsRbmw0HB8bkWwg37vhpqm")
-//                .roles("USER")
-//                .build();
-//        UserDetails admin = User.builder()
-//                .username("admin")
-//                .password("{bcrypt}$2a$12$td0Xz.UqCHMEqady3ay9huVMG.PvmMohsRbmw0HB8bkWwg37vhpqm")
-//                .roles("ADMIN", "USER")
-//                .build();
-//->
+//        // После создания пользователей отключаем их повторное создание
+//
+////        UserDetails user = User.builder()
+////                .username("user")
+////                .password("{bcrypt}$2a$12$td0Xz.UqCHMEqady3ay9huVMG.PvmMohsRbmw0HB8bkWwg37vhpqm")
+////                .roles("USER")
+////                .build();
+////        UserDetails admin = User.builder()
+////                .username("admin")
+////                .password("{bcrypt}$2a$12$td0Xz.UqCHMEqady3ay9huVMG.PvmMohsRbmw0HB8bkWwg37vhpqm")
+////                .roles("ADMIN", "USER")
+////                .build();
 //        JdbcUserDetailsManager jdbcUserDetailsManager = new JdbcUserDetailsManager(dataSource);
-//<!-        if (jdbcUserDetailsManager.userExists(user.getUsername())) {
-//            jdbcUserDetailsManager.deleteUser(user.getUsername());
-//        }
-//        if (jdbcUserDetailsManager.userExists(admin.getUsername())) {
-//            jdbcUserDetailsManager.deleteUser(admin.getUsername());
-//        }
-//        jdbcUserDetailsManager.createUser(admin);
-//->       jdbcUserDetailsManager.createUser(user);
+////        if (jdbcUserDetailsManager.userExists(user.getUsername())) {
+////            jdbcUserDetailsManager.deleteUser(user.getUsername());
+////        }
+////        if (jdbcUserDetailsManager.userExists(admin.getUsername())) {
+////            jdbcUserDetailsManager.deleteUser(admin.getUsername());
+////        }
+////        jdbcUserDetailsManager.createUser(admin);
+////        jdbcUserDetailsManager.createUser(user);
 //        return jdbcUserDetailsManager;
 //    }
 
